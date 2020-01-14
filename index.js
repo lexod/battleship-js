@@ -33,15 +33,19 @@ const initShip = (shipString, fieldSize) => {
     return result;
 };
 
-const shoot = (ships, shots) => ships.map(ship => {
-    shots.forEach(shot => {
-        if (ship[shot] !== undefined) {
-            ship[shot] = !ship[shot];
-            shots = shots.splice(shots.indexOf(shot));
-        }
-    });
-    return ship;
-});
+const shoot = (ships, shots) => {
+    while(shots.length) {
+        const shot = shots[0];
+        ships = ships.map(ship => {
+            if (ship[shot] !== undefined) {
+                ship[shot] = !ship[shot];
+            }
+            return ship;
+        });
+        shots.shift();
+    }
+    return ships;
+};
 
 const finishGame = (ships) => {
     let alive = 0, dead = 0;
@@ -55,6 +59,7 @@ const finishGame = (ships) => {
 };
 
 const assertions = [
+    {size: 4, ships: '1A 1C,2C 3D', shots: '1A 1B 1C 2C 1D', expected: '1,1'},
     {size: 3, ships: '1A 1B,2C', shots: '1B', expected: '2,0'},
     {size: 12, ships: '12A 12C,3C,9G 10H', shots: '1B 12A 12B 9G 9H 10G 10H', expected: '2,1'},
 ];
